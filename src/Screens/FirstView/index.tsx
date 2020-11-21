@@ -22,6 +22,7 @@ const FirstView = ({navigation} : Props) => {
             navigation.navigate('TranslateNavigator');
         }
         else if(index == 1){
+            requestExternalWrite();
             reqeustCameraPermission();
         }
         else if(index == 2){
@@ -38,6 +39,19 @@ const FirstView = ({navigation} : Props) => {
         }
         else{
             Alert.alert('카메라 권한이 거부 되었습니다.');
+            navigation.navigate("FirstView");
+        }
+    }
+
+    //외부 저장소 권한 획득 함수
+    async function requestExternalWrite(){
+        const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
+
+        if(granted === PermissionsAndroid.RESULTS.GRANTED){
+            console.log("외부 저장소 권환 획득!")
+        }
+        else{
+            Alert.alert('외부 저장소 권한이 거부 되었습니다.');
             navigation.navigate("FirstView");
         }
     }

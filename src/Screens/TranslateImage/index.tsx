@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import {StyleSheet, Button, View} from 'react-native';
+import {NavigationScreenProp, NavigationState} from 'react-navigation';
 import {RNCamera} from 'react-native-camera';
 import * as RNFS from 'react-native-fs';
+import RNFetchBlob from 'rn-fetch-blob';
+import base64 from 'base-64';
 
-interface Props{}
+interface Props{
+    navigation : NavigationScreenProp<NavigationState>;
+}
 
-const TranslateImageView = ({ } : Props) => {
+const TranslateImageView = ({navigation} : Props) => {
 
     const cameraRef = React.useRef(null);
     const takePhoto = () => {
@@ -15,15 +20,36 @@ const TranslateImageView = ({ } : Props) => {
                     quality:1,
                     exif: true,
                 });
-                RNFS.readFile(data['uri'], 'ascii').then(res => {
-                    console.log(res);
-                })
+                RNFS.readFile(data['uri'], 'ascii').then(imagedata => {
+                      const imgdata = base64.encode(imagedata)
+                      console.log(imgdata.length);
+                      console.log(typeof(imgdata))
+                      response(imgdata);
+                }
+                )
                 .catch(err => {
                     console.log(err.message);
                 });
             }
         }
         takePicture();
+    }
+
+    async function response(imagedata : string) {
+        await RNFetchBlob.fetch('POST', 'http://192.168.219.102:50000/translate', {
+        'Content-Type' : 'multipart/form-data',
+        },[
+            {name : 'file', type : 'image/*', data : imagedata}
+        ]).then(res => {
+            if(res.data != "None"){
+                console.log('res : ', res.data)
+                navigation.navigate("TranslatedViewNavigator");
+            } 
+        }
+        )
+        .catch(err => {
+            console.log(err);
+        })
     }
     
     return(

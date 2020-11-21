@@ -43,7 +43,9 @@ const TranslateImageView = ({navigation} : Props) => {
         ]).then(res => {
             if(res.data != "None"){
                 console.log('res : ', res.data)
-                navigation.navigate("TranslatedViewNavigator");
+                navigation.navigate("TranslatedViewNavigator", {
+                    'translated_text' : res.data,
+                });
             } 
         }
         )
@@ -64,6 +66,10 @@ const TranslateImageView = ({navigation} : Props) => {
         <Button 
             title="사진 찍기"
             onPress = {takePhoto}
+        />
+        <Button 
+            title="되돌아가기"
+            onPress = {() => {navigation.navigate("FirstView")}}
         />
         </View>
         </>

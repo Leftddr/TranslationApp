@@ -68,9 +68,8 @@ const FirstView = ({navigation} : Props) => {
 
 const styles = StyleSheet.create({
     title : {
-        flex : 1,
+        width : '100%',
         justifyContent : 'center',
-        alignItems : 'center',
         backgroundColor : '#F5FCFF',
         fontSize : 30,
     }

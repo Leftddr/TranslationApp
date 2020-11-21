@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Button, StyleSheet, Text} from 'react-native';
+import {View, Button, StyleSheet, Text, PermissionsAndroid, Alert} from 'react-native';
 import {NavigationScreenProp, NavigationState} from 'react-navigation';
 import Styled from 'styled-components/native';
 
@@ -22,7 +22,23 @@ const FirstView = ({navigation} : Props) => {
             navigation.navigate('TranslateNavigator');
         }
         else if(index == 1){
+            reqeustCameraPermission();
+        }
+        else if(index == 2){
             navigation.navigate('WeatherViewNavigator');
+        }
+    }
+
+    //카메라 권한을 획득할려는 함수
+    async function reqeustCameraPermission(){
+        const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
+
+        if(granted === PermissionsAndroid.RESULTS.GRANTED){
+            navigation.navigate("TranslateImageViewNavigator");
+        }
+        else{
+            Alert.alert('카메라 권한이 거부 되었습니다.');
+            navigation.navigate("FirstView");
         }
     }
 
@@ -30,7 +46,8 @@ const FirstView = ({navigation} : Props) => {
         <Container>
             <Text style={styles.title}>잡다한 어플</Text>
             <Button title="번역기" onPress={() => ClickBtn(0)}/>
-            <Button title="날씨" onPress={() => ClickBtn(1)}/>
+            <Button title="번역기(이미지)" onPress={() => ClickBtn(1)}/>
+            <Button title="날씨" onPress={() => ClickBtn(2)}/>
         </Container>
     )
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import Styled from 'styled-components/native';
-
-import TranslateView from '~/Screens/TranslateView';
+import { StatusBar } from 'react-native';
+import Navigator from '~/Screens/Navigator';
 
 const Container = Styled.View`
   flex: 1;
@@ -12,9 +12,10 @@ interface Props {}
 
 const App = ({  }: Props) => {
   return (
-    <Container>
-      <TranslateView />
-    </Container>
+    <>
+    <StatusBar barStyle="light-content" />
+    <Navigator/>
+    </>
   );
 };
 

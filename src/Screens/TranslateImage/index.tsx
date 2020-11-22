@@ -36,17 +36,19 @@ const TranslateImageView = ({navigation} : Props) => {
     }
 
     async function response(imagedata : string) {
-        await RNFetchBlob.fetch('POST', 'http://192.168.219.102:50000/translate', {
+        await RNFetchBlob.fetch('POST', 'http://192.168.219.104:50000/translate', {
         'Content-Type' : 'multipart/form-data',
         },[
             {name : 'file', type : 'image/*', data : imagedata}
         ]).then(res => {
+            res.data = "hi im bongwon";
             if(res.data != "None"){
                 console.log('res : ', res.data)
                 navigation.navigate("TranslatedViewNavigator", {
                     'translated_text' : res.data,
                 });
-            } 
+            }
+            console.log(res.data); 
         }
         )
         .catch(err => {
@@ -63,10 +65,12 @@ const TranslateImageView = ({navigation} : Props) => {
             ref={cameraRef}
         />
         <View style={styles.for_button}>
+        <View style={styles.blank}></View>
         <Button 
             title="사진 찍기"
             onPress = {takePhoto}
         />
+        <View style={styles.blank}></View>
         <Button 
             title="되돌아가기"
             onPress = {() => {navigation.navigate("FirstView")}}
@@ -79,12 +83,14 @@ const TranslateImageView = ({navigation} : Props) => {
 const styles = StyleSheet.create({
     camera:{
         width : '100%',
-        height : '80%'
+        height : '70%'
     },
     for_button:{
         width : '100%',
-        height : '20%',
-        justifyContent : 'center',
+        height : '10%',
+    },
+    blank:{
+        height:'20%'
     }
 })
 

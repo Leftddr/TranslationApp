@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, Alert, StyleSheet, TextInput, Text} from 'react-native';
-import Geolocation from 'react-native-geolocation-service';
+import {FlatList, Alert, StyleSheet, TextInput, Text, Button, View} from 'react-native';
+import {NavigationScreenProp, NavigationState} from 'react-navigation';
 
 import Styled from 'styled-components/native';
 import { resolvePlugin } from '@babel/core';
@@ -43,7 +43,9 @@ const Translated = Styled.Text`
     font-size : 16px;
 `;
 
-interface Props {}
+interface Props {
+    navigation : NavigationScreenProp<NavigationState>;
+}
 
 const API_KEY = "af35956434233a16d98f0c2170840ca3";
 
@@ -54,7 +56,7 @@ interface ITranslate {
     isLoading : boolean;
 }
 
-const TranslateView = ({ } : Props) => {
+const TranslateView = ({ navigation } : Props) => {
     const [translateInfo, setTranslateInfo] = useState<ITranslate>({
         before_translate : "",
         after_translate: "",
@@ -128,8 +130,13 @@ const TranslateView = ({ } : Props) => {
     const {isLoading, before_translate, after_translate} = translateInfo;
     return(
         <Container>
-            <TextInput multiline={true} numberOfLines={4} style={style.TextInput2} onChangeText={value => getTranslated(value)}></TextInput>
+            <TextInput multiline={true} numberOfLines={4} style={style.TextInput} onChangeText={value => getTranslated(value)}></TextInput>
             <Text style={style.plainText}>{translateInfo.after_translate}</Text>
+            <View style={style.blank}></View>
+            <Button 
+                title="되돌아가기"
+                onPress = {() => {navigation.navigate("FirstView")}}
+        />
         </Container>
     );
 
@@ -153,23 +160,27 @@ const style = StyleSheet.create({
         borderRadius:8,
         paddingLeft:16,
         paddingRight:16,
-        height:40,
+        height:'40%',
+        width : '100%'
     },
     plainText:{
+        height : '40%',
+        width : '100%',
+        borderWidth:2,
+        borderColor : 'green',
         marginTop:16,
         fontWeight:'bold',
         paddingLeft:10,
         paddingRight:10,
     },
-    TextInput2:{
-        marginTop: 16,
-        borderWidth:2,
-        borderColor:'blue',
-        borderRadius: 8,
-        padding:16,
-
-        maxHeight:150,
+    button:{
+        height : '10%',
+        width : '100%',
+        alignItems : 'center',
     },
+    blank:{
+        height:'10%'
+    }
 });
 
 

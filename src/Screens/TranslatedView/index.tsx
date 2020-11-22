@@ -10,7 +10,7 @@ const TranslatedView = ({navigation} : Props) => {
 
     const translated_text = navigation.getParam("translated_text");
     const movePage = () => {
-        navigation.navigate("TranslateImageNavigator");
+        navigation.navigate("TranslateImageViewNavigator");
     }
 
     return(
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
         width : '100%',
     },
     text : {
-        heigth : '80%',
+        height : '80%',
         width : '100%',
         alignItems : 'center',
         justifyContent : 'center',
@@ -38,3 +38,5 @@ const styles = StyleSheet.create({
         width : '100%',
     }
 })
+
+export default TranslatedView;

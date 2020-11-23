@@ -26,6 +26,9 @@ const FirstView = ({navigation} : Props) => {
             reqeustCameraPermission();
         }
         else if(index == 2){
+            navigation.navigate('DictionaryViewNavigator');
+        }
+        else if(index == 3){
             //requestCorasePosition();
             //requestFinePosition();
             navigation.navigate('WeatherViewNavigator');
@@ -92,6 +95,9 @@ const FirstView = ({navigation} : Props) => {
                 <Text>번역기(이미지)</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={() => ClickBtn(2)}>
+                <Text>사전</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={() => ClickBtn(3)}>
                 <Text>날씨</Text>
             </TouchableOpacity>
         </Container>

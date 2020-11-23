@@ -5,6 +5,7 @@ import TranslateView from '~/Screens/TranslateView';
 import WeatherView from '~/Screens/WeatherView';
 import TranslateImageView from '~/Screens/TranslateImage';
 import TranslatedView from '~/Screens/TranslatedView';
+import DictionaryView from '~/Screens/DictionaryView';
 import FirstView from '~/Screens/FirstView';
 
 //화면 이동을 위한 navigator를 만든다.
@@ -21,12 +22,17 @@ const TranslateImageViewNavigator = createStackNavigator({
     TranslatedView,
 });
 
+const DictionaryViewNavigator = createStackNavigator({
+    DictionaryView,
+})
+
 const AppNavigator = createSwitchNavigator(
     {
         FirstView,
         TranslateNavigator,
         WeatherViewNavigator,
         TranslateImageViewNavigator,
+        DictionaryViewNavigator,
     },
     {
         initialRouteName: 'FirstView',

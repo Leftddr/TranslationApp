@@ -13,8 +13,9 @@ interface Props {}
 const App = ({  }: Props) => {
   return (
     <>
+    <Navigator>
     <StatusBar barStyle="light-content" />
-    <Navigator/>
+    </Navigator>
     </>
   );
 };

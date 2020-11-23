@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Alert } from 'react-native';
+import { FlatList, Alert, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
+import {NavigationScreenProp, NavigationState} from 'react-navigation';
 
 import Styled from 'styled-components/native';
+
+interface Props{
+  navigation : NavigationScreenProp<NavigationState>;
+}
 
 const Container = Styled.SafeAreaView`
   flex: 1;
@@ -37,8 +42,6 @@ const Temperature = Styled.Text`
   font-size: 16px;
 `;
 
-interface Props {}
-
 const API_KEY = '73bd07d674cc4569f650bad6f22dc79d';
 
 interface IWeather {
@@ -46,7 +49,7 @@ interface IWeather {
   weather?: string;
   isLoading: boolean;
 }
-const WeatherView = ({  }: Props) => {
+const WeatherView = ({ navigation }: Props) => {
   const [weatherInfo, setWeatherInfo] = useState<IWeather>({
     temperature: undefined,
     weather: undefined,
@@ -104,6 +107,7 @@ const WeatherView = ({  }: Props) => {
   }
 
   return (
+    <>
     <Container>
       <WeatherContainer
         onRefresh={() => getCurrentWeather()}
@@ -126,8 +130,21 @@ const WeatherView = ({  }: Props) => {
         )}
         contentContainerStyle={{ flex: 1 }}
       />
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('FirstView')}>
+          <Text>되돌아가기</Text>
+      </TouchableOpacity>
     </Container>
+    </>
   );
 };
+
+const styles = StyleSheet.create({
+  button:{
+      width : '100%',
+      alignItems: "center",
+      backgroundColor: "#DDFDDF",
+      padding: 10
+  },
+})
 
 export default WeatherView;

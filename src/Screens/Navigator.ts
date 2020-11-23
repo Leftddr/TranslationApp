@@ -18,9 +18,6 @@ const WeatherViewNavigator = createStackNavigator({
 
 const TranslateImageViewNavigator = createStackNavigator({
     TranslateImageView,
-});
-
-const TranslatedViewNavigator = createStackNavigator({
     TranslatedView,
 });
 
@@ -30,7 +27,6 @@ const AppNavigator = createSwitchNavigator(
         TranslateNavigator,
         WeatherViewNavigator,
         TranslateImageViewNavigator,
-        TranslatedViewNavigator,
     },
     {
         initialRouteName: 'FirstView',

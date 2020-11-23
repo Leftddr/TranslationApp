@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Button, StyleSheet, Text, PermissionsAndroid, Alert} from 'react-native';
+import {View, Button, StyleSheet, Text, PermissionsAndroid, Alert, TouchableOpacity} from 'react-native';
 import {NavigationScreenProp, NavigationState} from 'react-navigation';
 import Styled from 'styled-components/native';
 
@@ -26,6 +26,8 @@ const FirstView = ({navigation} : Props) => {
             reqeustCameraPermission();
         }
         else if(index == 2){
+            //requestCorasePosition();
+            //requestFinePosition();
             navigation.navigate('WeatherViewNavigator');
         }
     }
@@ -56,12 +58,42 @@ const FirstView = ({navigation} : Props) => {
         }
     }
 
+    //위치 정보 가져오기
+    async function requestCorasePosition(){
+        const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_CORASE_LOCATION);
+
+        if(granted === PermissionsAndroid.RESULTS.GRANTED){
+            console.log("Corase Position 획득!")
+        }
+        else{
+            Alert.alert('외부 저장소 권한이 거부 되었습니다.');
+        }
+    }
+
+    async function requestFinePosition(){
+        const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+
+        if(granted === PermissionsAndroid.RESULTS.GRANTED){
+            console.log("FinePosition 획득!")
+            navigation.navigate('WeatherViewNavigator');
+        }
+        else{
+            Alert.alert('외부 저장소 권한이 거부 되었습니다.');
+        }
+    }
+
     return(
         <Container>
             <Text style={styles.title}>잡다한 어플</Text>
-            <Button title="번역기" onPress={() => ClickBtn(0)}/>
-            <Button title="번역기(이미지)" onPress={() => ClickBtn(1)}/>
-            <Button title="날씨" onPress={() => ClickBtn(2)}/>
+            <TouchableOpacity style={styles.button} onPress={() => ClickBtn(0)}>
+                <Text>번역기(타이핑)</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={() => ClickBtn(1)}>
+                <Text>번역기(이미지)</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={() => ClickBtn(2)}>
+                <Text>날씨</Text>
+            </TouchableOpacity>
         </Container>
     )
 }
@@ -69,10 +101,18 @@ const FirstView = ({navigation} : Props) => {
 const styles = StyleSheet.create({
     title : {
         width : '100%',
+        height : '70%',
+        alignItems : 'center',
         justifyContent : 'center',
         backgroundColor : '#F5FCFF',
         fontSize : 30,
-    }
+    },
+    button:{
+        width : '100%',
+        alignItems: "center",
+        backgroundColor: "#DDFDDF",
+        padding: 10
+    },
 })
 
 export default FirstView;

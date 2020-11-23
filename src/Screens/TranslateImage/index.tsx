@@ -1,16 +1,37 @@
 import React, { useEffect, useState } from 'react';
-import {StyleSheet, Button, View} from 'react-native';
+import {StyleSheet, Button, View, Text} from 'react-native';
 import {NavigationScreenProp, NavigationState} from 'react-navigation';
 import {RNCamera} from 'react-native-camera';
 import * as RNFS from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob';
 import base64 from 'base-64';
+import Styled from 'styled-components/native';
+
+const LoadingView = Styled.View`
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+`;
+const Loading = Styled.ActivityIndicator`
+    margin-bottom: 16px;
+`;
+const LoadingLabel = Styled.Text`
+  font-size: 16px;
+`;
 
 interface Props{
     navigation : NavigationScreenProp<NavigationState>;
 }
 
+interface need{
+    Loading ?: boolean;
+}
+
 const TranslateImageView = ({navigation} : Props) => {
+    const [need, setNeed] = useState<need>({
+        Loading : false
+    }
+    )
 
     const cameraRef = React.useRef(null);
     const takePhoto = () => {
@@ -20,10 +41,14 @@ const TranslateImageView = ({navigation} : Props) => {
                     quality:1,
                     exif: true,
                 });
+                setNeed({
+                    Loading : true,
+                })
                 RNFS.readFile(data['uri'], 'ascii').then(imagedata => {
                       const imgdata = base64.encode(imagedata)
-                      console.log(imgdata.length);
-                      console.log(typeof(imgdata))
+                      setNeed({
+                          Loading : true,
+                      })
                       response(imgdata);
                 }
                 )
@@ -36,48 +61,69 @@ const TranslateImageView = ({navigation} : Props) => {
     }
 
     async function response(imagedata : string) {
-        await RNFetchBlob.fetch('POST', 'http://192.168.219.104:50000/translate', {
+        await RNFetchBlob.fetch('POST', 'http://192.168.219.100:50000/translate', {
         'Content-Type' : 'multipart/form-data',
         },[
             {name : 'file', type : 'image/*', data : imagedata}
         ]).then(res => {
-            res.data = "hi im bongwon";
+            console.log('res : ', res.data)
+            setNeed({
+                Loading : false,
+            })
             if(res.data != "None"){
-                console.log('res : ', res.data)
-                navigation.navigate("TranslatedViewNavigator", {
-                    'translated_text' : res.data,
+                navigation.navigate("TranslatedView", {
+                        'translated_text' : res.data,
                 });
             }
-            console.log(res.data); 
+            else{
+                navigation.navigate("TranslatedView", {
+                    'translated_text' : 'I cannot translate this sentence!',
+                })
+            }
         }
         )
         .catch(err => {
             console.log(err);
         })
     }
+
+    useEffect(() => {
+        
+    }, [need.Loading]);
+
     
-    return(
-        <>
-        <RNCamera
-            style={styles.camera}
-            type={RNCamera.Constants.Type.back}
-            captureAudio={false}
-            ref={cameraRef}
-        />
-        <View style={styles.for_button}>
-        <View style={styles.blank}></View>
-        <Button 
-            title="사진 찍기"
-            onPress = {takePhoto}
-        />
-        <View style={styles.blank}></View>
-        <Button 
-            title="되돌아가기"
-            onPress = {() => {navigation.navigate("FirstView")}}
-        />
-        </View>
-        </>
-    );
+    if(need.Loading){
+        return(
+            <LoadingView>
+                <Loading size="large" color="#1976D2" />
+                <LoadingLabel>Loading...</LoadingLabel>
+            </LoadingView>
+        )
+    }
+    else{
+        return(
+            <>
+            <RNCamera
+                style={styles.camera}
+                type={RNCamera.Constants.Type.back}
+                captureAudio={false}
+                ref={cameraRef}
+            />
+            <View style={styles.for_button}>
+            <View style={styles.blank}></View>
+            <Button 
+                title="사진 찍기"
+                onPress = {takePhoto}
+            />
+            <View style={styles.blank}></View>
+            <Button 
+                title="되돌아가기"
+                onPress = {() => {navigation.navigate("FirstView")}}
+            />
+            </View>
+            </>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
@@ -91,6 +137,13 @@ const styles = StyleSheet.create({
     },
     blank:{
         height:'20%'
+    },
+    loading : {
+        width:'100%',
+        height : '100%',
+        fontSize : 30,
+        alignItems : 'center',
+        justifyContent : 'center',
     }
 })
 
